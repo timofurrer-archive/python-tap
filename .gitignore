@@ -6,3 +6,6 @@
 
 # python virtual env
 env
+
+# python nosetest coverage file
+.coverage
