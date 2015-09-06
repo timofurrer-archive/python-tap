@@ -87,3 +87,12 @@ ok 3 - Proc with Data
   severity: fail
   ...
 """)
+
+    def test_set_expected_test_plan(self):
+        """
+            Test setting expected test plan
+        """
+        result = tap.TAPResult(2)
+        result.ok("Some test")
+        result.not_ok("Some failed proc")
+        result.ok.when.called_with("Some other test").should.throw(tap.BailOutError, "Bail Out! Expected test plan of 2 tests overflowed")

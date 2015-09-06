@@ -11,6 +11,22 @@ __email__ = "tuxtimo@gmail.com"
 import yaml
 
 
+class TAPError(Exception):
+    """
+        Base class for all TAP errors
+    """
+    pass
+
+
+class BailOutError(TAPError):
+    """
+        This exception is raised if the expected test plan
+        overflows.
+    """
+    def __init__(self, plan):
+        TAPError.__init__(self, "Bail Out! Expected test plan of {} tests overflowed".format(plan))
+
+
 class TAPProcedure(object):  # pylint: disable=too-few-public-methods
     """
         Represents one TAP procedure
@@ -57,13 +73,29 @@ class TAPProcedure(object):  # pylint: disable=too-few-public-methods
         return output
 
 
+class BailOutProcedure(TAPProcedure):  # pylint: disable=too-few-public-methods
+    """
+        Dummy procedure when test plan bailed out.
+    """
+    def __init__(self, message):
+        TAPProcedure.__init__(self, False)
+        self.message = message
+
+    def __str__(self):
+        """
+            Returns the Procedure as line
+        """
+        return "Bail Out! {}".format(self.message)
+
+
 
 class TAPResult(object):
     """
         Write a TAP result file
     """
-    def __init__(self):
+    def __init__(self, plan=None):
         self.procedures = []
+        self.expected_plan = plan
 
     @property
     def plan(self):
@@ -72,10 +104,20 @@ class TAPResult(object):
         """
         return len(self.procedures)
 
+    @plan.setter
+    def plan(self, plan):
+        """
+            Sets the expected test plan (amount of procedures)
+        """
+        self.expected_plan = plan
+
     def append(self, passed, name=None, directive=None, data=None):
         """
             Adds a procedure to write
         """
+        if self.plan == self.expected_plan:
+            raise BailOutError(self.expected_plan)
+
         if isinstance(passed, TAPProcedure):
             self.procedures.append(passed)
         else:
@@ -103,6 +145,13 @@ class TAPResult(object):
             Add failed TAP procedure
         """
         self.append(TAPProcedure(False, name, directive, data))
+        return True
+
+    def bail_out(self, message):
+        """
+            Bail out test plan with given message
+        """
+        self.procedures.append(BailOutProcedure(message))
         return True
 
     def __str__(self):
