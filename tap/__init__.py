@@ -76,6 +76,20 @@ class TAPResult(object):
         self.append(procedure)
         return self
 
+    def ok(self, name=None, directive=None, data=None):  # pylint: disable=invalid-name
+        """
+            Add passed TAP procedure
+        """
+        self.append(TAPProcedure(True, name, directive, data))
+        return True
+
+    def not_ok(self, name=None, directive=None, data=None):
+        """
+            Add failed TAP procedure
+        """
+        self.append(TAPProcedure(False, name, directive, data))
+        return True
+
     def __str__(self):
         """
             Returns a string representation of the TAP file
