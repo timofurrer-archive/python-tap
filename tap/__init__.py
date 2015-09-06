@@ -4,6 +4,10 @@
     Module providing a TAPWriter and a TAPProcedure representation class.
 """
 
+__version__ = "0.0.1"
+__author__ = "Timo Furrer"
+__email__ = "tuxtimo@gmail.com"
+
 import yaml
 
 
