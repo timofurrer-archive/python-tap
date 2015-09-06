@@ -15,6 +15,14 @@ class TAPProcedure(object):  # pylint: disable=too-few-public-methods
     """
         Represents one TAP procedure
     """
+    class Directive(object):  # pylint: disable=too-few-public-methods
+        """
+            All allowed directives
+        """
+        TODO = "TODO"
+        SKIP = "SKIP"
+
+
     def __init__(self, passed, name=None, directive=None, data=None):
         self._passed = passed
         self.name = name
@@ -56,6 +64,13 @@ class TAPResult(object):
     """
     def __init__(self):
         self.procedures = []
+
+    @property
+    def plan(self):
+        """
+            Returns the test plan of the current result
+        """
+        return len(self.procedures)
 
     def append(self, passed, name=None, directive=None, data=None):
         """

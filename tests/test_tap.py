@@ -44,11 +44,11 @@ class TapTest(TestCase):
         result.procedures[0].passed.should.be.equal("ok")
         result.procedures[0].name.should.be.equal("Some Name")
 
-        result.append(tap.TAPProcedure(False, "Another Proc", "TODO"))
+        result.append(tap.TAPProcedure(False, "Another Proc", tap.TAPProcedure.Directive.TODO))
         result.procedures.should.have.length_of(2)
         result.procedures[1].passed.should.be.equal("not ok")
         result.procedures[1].name.should.be.equal("Another Proc")
-        result.procedures[1].directive.should.be.equal("TODO")
+        result.procedures[1].directive.should.be.equal(tap.TAPProcedure.Directive.TODO)
 
     def test_tap_result_adding_procedure_with_iadd_op(self):
         """
@@ -61,11 +61,11 @@ class TapTest(TestCase):
         result.procedures[0].passed.should.be.equal("ok")
         result.procedures[0].name.should.be.equal("Some Name")
 
-        result += tap.TAPProcedure(False, "Another Proc", "TODO")
+        result += tap.TAPProcedure(False, "Another Proc", tap.TAPProcedure.Directive.TODO)
         result.procedures.should.have.length_of(2)
         result.procedures[1].passed.should.be.equal("not ok")
         result.procedures[1].name.should.be.equal("Another Proc")
-        result.procedures[1].directive.should.be.equal("TODO")
+        result.procedures[1].directive.should.be.equal(tap.TAPProcedure.Directive.TODO)
 
     def test_tap_result_producer(self):
         """
