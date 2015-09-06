@@ -93,9 +93,10 @@ class TAPResult(object):
     """
         Write a TAP result file
     """
-    def __init__(self, plan=None):
+    def __init__(self, plan=None, description=None):
         self.procedures = []
         self.expected_plan = plan
+        self.description = description
 
     @property
     def plan(self):
@@ -161,9 +162,13 @@ class TAPResult(object):
         output = "TAP version 13\n"
         if not self.procedures:  # no procedures found to write to result file
             output += "# no procedures found\n"
-            return True
+            return output
 
         output += "1..{}\n".format(len(self.procedures))
+        if self.description:
+            for line in self.description.splitlines():
+                output += "# {}\n".format(line)
+
         for i, procedure in enumerate(self.procedures, 1):
             output += str(procedure).format(id=i) + "\n"
         return output

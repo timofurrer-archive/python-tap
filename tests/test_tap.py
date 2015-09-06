@@ -96,3 +96,16 @@ ok 3 - Proc with Data
         result.ok("Some test")
         result.not_ok("Some failed proc")
         result.ok.when.called_with("Some other test").should.throw(tap.BailOutError, "Bail Out! Expected test plan of 2 tests overflowed")
+
+    def test_add_test_description(self):
+        """
+            Test adding a test plan description
+        """
+        result = tap.TAPResult(description="This is a description\nOn multiple lines")
+        result.ok("Some test")
+        str(result).should.be.equal("""TAP version 13
+1..1
+# This is a description
+# On multiple lines
+ok 1 - Some test
+""")
